@@ -115,18 +115,20 @@ RLEListResult RLEListRemove(RLEList list, int index)
     while(indexSoFar < index)
     {
         indexSoFar += (list->nextRLE)->numOfAppearences;
-        if(indexSoFar <= index)
+        if(indexSoFar < index)
         {
             list = list->nextRLE;
         }
     }
 
     //in this case the index was in the first node
-    if(list==head)
+    if(list==head && index+1<=list->numOfAppearences)
     {
         if(list->numOfAppearences == 1 && list->nextRLE)
         {
-            list = list->nextRLE;
+            list->value = (list->nextRLE)->value;
+            list->numOfAppearences = (list->nextRLE)->numOfAppearences;
+            list->nextRLE = (list->nextRLE)->nextRLE;
         }
         else
         {
@@ -163,24 +165,19 @@ char RLEListGet(RLEList list, int index, RLEListResult *result)
     {
         *result = RLE_LIST_SUCCESS;
     }
-    int indexSoFar = list->numOfAppearences-1;   
+    int indexSoFar = 0;//list->numOfAppearences-1;   
     RLEList head = list;  
     while(indexSoFar < index)
     {
-        indexSoFar += (list->nextRLE)->numOfAppearences;
-        if(indexSoFar < index)
+        indexSoFar += list->numOfAppearences;
+        if(indexSoFar <= index)
         {
             list = list->nextRLE;
         }
     }
-
-    //in this case the index was in the first node
-    if(list==head)
-    {
-        return list->value;
-    }
-    //in this case the index was in the next nodes
-    return (list->nextRLE)->value;
+    char returnValue=list->value;
+    list=head;
+    return returnValue;
 }
 
 char* RLEListExportToString(RLEList list, RLEListResult* result)
