@@ -1,4 +1,4 @@
-#include "C:\Users\ronko\ex1\RLEList.h"
+#include "RLEList.h"
 #include <stdlib.h>
 #define ERROR_INT (-1)
 
