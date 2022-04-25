@@ -15,14 +15,12 @@ static int RLENumOfNodes(RLEList list);
 
 static int RLENumOfNodes(RLEList list)
 {
-    RLEList head = list;
     int result=0;
     while(list)
     {
         result++;
         list = list->nextRLE;
     }
-    list = head;
     return result;
 }
 
@@ -54,7 +52,6 @@ RLEListResult RLEListAppend(RLEList list, char value)
     {
         return RLE_LIST_NULL_ARGUMENT;
     }
-    RLEList head=list;
     while(list->nextRLE!=NULL)
     {
         list = list->nextRLE; 
@@ -78,13 +75,11 @@ RLEListResult RLEListAppend(RLEList list, char value)
     list->nextRLE=newRLE;
     newRLE -> value = value;
     newRLE -> numOfAppearences = 1;
-    list = head;
     return RLE_LIST_SUCCESS;
 }
 
 int RLEListSize(RLEList list)
 {
-    RLEList head = list;
     if(!list)
     {
         return ERROR_INT;
@@ -95,7 +90,6 @@ int RLEListSize(RLEList list)
         sum += list->numOfAppearences;
         list=list->nextRLE;
     }
-    list=head;
     return sum;
 }
 
@@ -141,6 +135,11 @@ RLEListResult RLEListRemove(RLEList list, int index)
     if((list->nextRLE)->numOfAppearences==1)
     {
         list->nextRLE = (list->nextRLE)->nextRLE;
+        while(list->nextRLE&&list->value==(list->nextRLE)->value)
+        {
+            list->numOfAppearences+=(list->nextRLE)->numOfAppearences;
+            list->nextRLE = (list->nextRLE)->nextRLE;
+        }
     }
     else
     {
@@ -165,8 +164,8 @@ char RLEListGet(RLEList list, int index, RLEListResult *result)
     {
         *result = RLE_LIST_SUCCESS;
     }
-    int indexSoFar = 0;//list->numOfAppearences-1;   
-    RLEList head = list;  
+    int indexSoFar = 0; 
+
     while(indexSoFar < index)
     {
         indexSoFar += list->numOfAppearences;
@@ -176,17 +175,15 @@ char RLEListGet(RLEList list, int index, RLEListResult *result)
         }
     }
     char returnValue=list->value;
-    list=head;
     return returnValue;
 }
 
 char* RLEListExportToString(RLEList list, RLEListResult* result)
 {
-    RLEList head = list;
     if(!list && result)
     {
         *result = RLE_LIST_NULL_ARGUMENT;
-        return 0;
+        return NULL;
     }
     if(result)
     {
@@ -203,7 +200,6 @@ char* RLEListExportToString(RLEList list, RLEListResult* result)
         list = list->nextRLE;
     }
     outString[i] = '\0';
-    list = head;
     return outString;
 }
 
