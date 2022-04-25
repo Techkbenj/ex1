@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "RLEList.h"
+#include "/home/ron.kogas/ex1/ex1/RLEList.h"
 #include "test_utilities.h"
 
 typedef bool (*testFunc)(void);
@@ -60,25 +60,30 @@ bool basicTest(){
 
     //adding elements to the list
     ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // a
-    ASSERT_TEST(RLEListAppend(list, 'c') == RLE_LIST_SUCCESS, destroy);    // ac
-    ASSERT_TEST(RLEListAppend(list, 'b') == RLE_LIST_SUCCESS, destroy);    // acb
-    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acba
-    ASSERT_TEST(RLEListAppend(list, 'b') == RLE_LIST_SUCCESS, destroy);    // acbab
-    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbaba
-    ASSERT_TEST(RLEListAppend(list, 'b') == RLE_LIST_SUCCESS, destroy);    // acbabab
-    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbababa
-    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbababaa
-    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // acbababaaa
-
-    ASSERT_TEST(RLEListRemove(list, 1) == RLE_LIST_SUCCESS, destroy); // abababaaa
-
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aa
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aaa
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aaaa
+    /**ASSERT_TEST(RLEListRemove(list, 0) == RLE_LIST_SUCCESS, destroy); // cba
+    printf("%s\n\n",RLEListExportToString(list,NULL));**/
+    ASSERT_TEST(RLEListAppend(list, 'b') == RLE_LIST_SUCCESS, destroy);    // aaaab
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aaaaba
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aaaabaa
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aaaabaaa
+    ASSERT_TEST(RLEListAppend(list, 'c') == RLE_LIST_SUCCESS, destroy);    // aaaabaaaa
+    ASSERT_TEST(RLEListAppend(list, 'a') == RLE_LIST_SUCCESS, destroy);    // aaaabaaaaa
+    printf("%s\n\n",RLEListExportToString(list,NULL));
+    ASSERT_TEST(RLEListRemove(list, 4) == RLE_LIST_SUCCESS, destroy); // cababaaa
+    printf("%s\n\n",RLEListExportToString(list,NULL));
+    ASSERT_TEST(RLEListRemove(list, 7) == RLE_LIST_SUCCESS, destroy); // cababaaa
+    printf("%s\n\n",RLEListExportToString(list,NULL));
     // check if the represented string is "abababaaa"
-    const char *s = "abababaaa";
+    const char *s = "aaaaaaaaa";
     char it;
     for(int i=0; i<RLEListSize(list); i++)
     {
         it=RLEListGet(list, i, NULL);
-        ASSERT_TEST(it == s[i++], destroy);
+        printf("%c",it);
+        ASSERT_TEST(it == s[i], destroy);
     }
     //check if the length's are equal
     ASSERT_TEST(RLEListSize(list)==strlen(s), destroy);
